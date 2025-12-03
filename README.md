@@ -64,28 +64,47 @@ npm install
 ```
 
 3. Set up environment variables:
+
+**For Development:**
+```bash
+cp .env.development.example .env.development
+```
+
+**For Production:**
 ```bash
 cp env.example .env
 ```
 
-4. Update the `.env` file with your configuration:
+4. Update the environment files with your configuration:
+
+**Development (`.env.development`):**
 ```env
 PORT=3000
 NODE_ENV=development
-DATABASE_URL=mongodb://localhost:27017/express-scaffold
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+DATABASE_URL=mongodb://localhost:27017/express-scaffold-dev
+JWT_SECRET=dev-secret-key-change-this
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=*
 ```
 
+**Production (`.env`):**
+```env
+PORT=3000
+NODE_ENV=production
+DATABASE_URL=mongodb://your-production-db-url
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRES_IN=7d
+CORS_ORIGIN=https://yourdomain.com
+```
+
 ### Running the Application
 
-**Development mode** (with hot reload):
+**Development mode** (uses `.env.development`):
 ```bash
 yarn dev
 ```
 
-**Production mode**:
+**Production mode** (uses `.env`):
 ```bash
 # Build the project
 yarn build
@@ -94,7 +113,16 @@ yarn build
 yarn start
 ```
 
+**Run built code in development** (uses `.env.development`):
+```bash
+yarn start:dev
+```
+
 The server will start on `http://localhost:3000` (or your configured PORT).
+
+> **Note:** The application automatically loads the correct environment file based on `NODE_ENV`:
+> - `development` → `.env.development`
+> - `production` → `.env`
 
 ## 📡 API Endpoints
 
@@ -144,9 +172,10 @@ Authorization: Bearer <your-jwt-token>
 
 ## 📝 Available Scripts
 
-- `yarn dev` - Run the app in development mode with ts-node
+- `yarn dev` - Run the app in development mode with ts-node (uses `.env.development`)
 - `yarn build` - Compile TypeScript to JavaScript
-- `yarn start` - Run the compiled JavaScript app
+- `yarn start` - Run the compiled app in production mode (uses `.env`)
+- `yarn start:dev` - Run the compiled app in development mode (uses `.env.development`)
 - `yarn clean` - Remove the dist folder
 - `yarn test` - Run tests (to be implemented)
 
@@ -163,7 +192,25 @@ This scaffold follows a layered architecture:
 
 ## 🔧 Configuration
 
-All configuration is managed through environment variables. See `env.example` for all available options.
+All configuration is managed through environment-specific files:
+
+### Environment Files
+
+- **`.env.development`** - Used when `NODE_ENV=development` (for local development)
+- **`.env`** - Used when `NODE_ENV=production` (for production deployments)
+- **`env.example`** - Template for production environment
+- **`.env.development.example`** - Template for development environment
+
+The application automatically loads the correct file based on the `NODE_ENV` variable. This is handled in `src/config/index.ts`.
+
+### Configuration Variables
+
+See the example files for all available configuration options:
+- Server configuration (PORT, NODE_ENV)
+- Database connection (DATABASE_URL)
+- JWT settings (JWT_SECRET, JWT_EXPIRES_IN)
+- CORS settings (CORS_ORIGIN)
+- API versioning (API_VERSION)
 
 ## 🤝 Contributing
 

@@ -11,8 +11,13 @@ build/
 
 # Environment variables
 .env
+.env.development
+.env.production
 .env.local
 .env.*.local
+
+# Keep example files (these are tracked in git)
+!*.example
 
 # IDE
 .vscode/
